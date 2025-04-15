@@ -16,18 +16,40 @@ class Phone(Field):
 		pass
 
 class Record:
-    def __init__(self, name):
-        self.name = Name(name)
-        self.phones = []
+  def __init__(self, name):
+    self.name = Name(name)
+    self.phones = []
 
-    # реалізація класу
+  def add_phone(self, phone: str):
+    self.phones.append(Phone(phone))
+    
+  def remove_phone(self, phone: str):
+    self.phones = [p for p in self.phones if p.value != phone]    
 
-    def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+  def edit_phone(self, old_phone: str, new_phone: str):
+    pass
+  
+  def find_phone(self, phone: str):
+    pass
+
+  def __str__(self):
+    return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+
 
 class AddressBook(UserDict):
-    # реалізація класу
-		pass
+  def add_record(self, contact):
+    pass
+    
+  
+  def find(self):
+    pass  
+
+  def delete(self):
+    pass
+
+
+
+
 
 
 # Створення нової адресної книги
