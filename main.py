@@ -1,4 +1,5 @@
 from collections import UserDict
+import re
 
 class Field: # Базовий клас для полів запису.
   def __init__(self, value):
@@ -8,11 +9,21 @@ class Field: # Базовий клас для полів запису.
     return str(self.value)
 
 class Name(Field): # Клас для зберігання імені контакту. Обов'язкове поле.
-    pass
+  def __init__(self, value):
+    # if not value:
+    #   raise ValueError('Empty value')
+    super().__init__(value)
 
-class Phone(Field): # Реалізовано валідацію номера телефону (має бути перевірка на 10 цифр).
-  #Наслідує клас Field. Значення зберігaється в полі value .
-	pass
+class Phone(Field):
+  def __init__(self, value):
+    self.validate(value)
+    super().__init__(value)
+
+  @staticmethod
+  def validate(value):
+    if not re.fullmatch(r'\d{10}', value):
+      raise ValueError("No more than 10 cgaracters")
+
 
 class Record: # Клас для зберігання інформації про контакт, включаючи ім'я та список телефонів.
   def __init__(self, name):
@@ -28,11 +39,15 @@ class Record: # Клас для зберігання інформації про
   def edit_phone(self, old_phone: str, new_phone: str): # Реалізовано метод для редагування - edit_phone. 
   #На вхід подається два аргумента - рядки,які містять старий номер телефона та новий. 
   #У разі некоректності вхідних даних метод має завершуватись помилкою ValueError.
-    pass
+    old_phone = self
   
-  def find_phone(self, phone: str): # Реалізовано метод для пошуку об'єктів Phone - find_phone. 
+  def find_phone(self, phone_find: str): # Реалізовано метод для пошуку об'єктів Phone - find_phone. 
   #На вхід подається рядок, який містить номер телефона. Метод має повертати або об’єкт Phone, або None .
-    pass
+    for phone in self.phones:
+      if phone.value == phone_find:
+        return phone
+      else:
+        return None
 
   def __str__(self):
     return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
@@ -59,12 +74,12 @@ class AddressBook(UserDict): #Клас для зберігання та упра
 book = AddressBook()
 
 # Створення запису для John
-john_record = Record("John")
+john_record = Record('')
 john_record.add_phone("1234567890")
 john_record.add_phone("5555555555")
 
 # Додавання запису John до адресної книги
-book.add_record(john_record)
+book.add_record(john_record) # Contact name: John, phones: 1234567890; 5555555555
 
 # Створення та додавання нового запису для Jane
 jane_record = Record("Jane")
