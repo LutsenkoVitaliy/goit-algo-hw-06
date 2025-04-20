@@ -65,7 +65,8 @@ class AddressBook(UserDict):
     del self.data[name]
 
   # Реалізовано магічний метод __str__ для красивого виводу об’єкту класу AddressBook .
-  
+  def __str__(self):
+    return "\n".join(str(contact) for contact in self.data.values())
 
 
 # Створення нової адресної книги
@@ -86,6 +87,8 @@ book.add_record(jane_record)
 
 # Виведення всіх записів у книзі
 print(book)
+# Contact name: John, phones: 1234567890; 5555555555
+# Contact name: Jane, phones: 9876543210
 
 # Знаходження та редагування телефону для John
 john = book.find("John")
@@ -95,8 +98,10 @@ print(john) # Виведення: Contact name: John, phones: 1112223333; 555555
 
 # # Пошук конкретного телефону у записі John
 found_phone = john.find_phone("5555555555")
-print(f"{john.name}: {found_phone}")  # Виведення: John: 5555555555
+print(f"{john.name}: {found_phone}")  
+# John: 5555555555
 
 # Видалення запису Jane
 book.delete("Jane")
 print(book)
+# Contact name: John, phones: 1112223333; 5555555555
