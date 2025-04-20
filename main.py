@@ -1,51 +1,45 @@
 from collections import UserDict
 import re
 
-class Field: # Базовий клас для полів запису.
+class Field:
   def __init__(self, value):
     self.value = value
         
   def __str__(self):
     return str(self.value)
 
-class Name(Field): # Клас для зберігання імені контакту. Обов'язкове поле.
+class Name(Field):
   def __init__(self, value):
-    # if not value:
-    #   raise ValueError('Empty value')
+    if not value:
+      raise ValueError('Empty value')
     super().__init__(value)
 
 class Phone(Field):
   def __init__(self, value):
-    self.validate(value)
+    self._validate(value)
     super().__init__(value)
 
   @staticmethod
-  def validate(value):
+  def _validate(value):
     if not re.fullmatch(r'\d{10}', value):
       raise ValueError("No more than 10 cgaracters")
 
 
-class Record: # Клас для зберігання інформації про контакт, включаючи ім'я та список телефонів.
+class Record:
   def __init__(self, name):
-    self.name = Name(name) # Реалізовано зберігання об'єкта Name в атрибуті name.
-    self.phones = [] # Реалізовано зберігання списку об'єктів Phone в атрибуті phones.
+    self.name = Name(name)
+    self.phones = []
 
   def add_phone(self, phone: str):
-    self.phones.append(Phone(phone)) # Реалізовано метод для додавання - add_phone .На вхід подається рядок, який містить номер телефона.
+    self.phones.append(Phone(phone))
     
-  def remove_phone(self, phone: str): # Реалізовано метод для видалення - remove_phone. На вхід подається рядок, який містить номер телефона.
+  def remove_phone(self, phone: str): 
     self.phones = [p for p in self.phones if p.value != phone]
 
-  def find_phone(self, phone_find: str): 
-    for phone in self.phones:
-      if phone.value == phone_find:
-        return phone
- 
-    return None    
+  def find_phone(self, find_phone: str): 
+    return next(filter(lambda phone: phone.value == find_phone, self.phones), None)
 
-  def edit_phone(self, old_phone: str, new_phone: str): # Реалізовано метод для редагування - edit_phone. 
-  #На вхід подається два аргумента - рядки,які містять старий номер телефона та новий. 
-  #У разі некоректності вхідних даних метод має завершуватись помилкою ValueError.
+  def edit_phone(self, old_phone: str, new_phone: str):
     old_phone_include = self.find_phone(old_phone)
     if old_phone_include:
       new_phone_include = Phone(new_phone)
@@ -68,10 +62,10 @@ class AddressBook(UserDict):
     return None
 
   def delete(self, name):
-    # if name in self.data
-    self.data.pop(name)
+    del self.data[name]
 
   # Реалізовано магічний метод __str__ для красивого виводу об’єкту класу AddressBook .
+  
 
 
 # Створення нової адресної книги
@@ -100,8 +94,8 @@ john.edit_phone("1234567890", "1112223333")
 print(john) # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
 # # Пошук конкретного телефону у записі John
-# found_phone = john.find_phone("5555555555")
-# print(f"{john.name}: {found_phone}")  # Виведення: John: 5555555555
+found_phone = john.find_phone("5555555555")
+print(f"{john.name}: {found_phone}")  # Виведення: John: 5555555555
 
 # Видалення запису Jane
 book.delete("Jane")
