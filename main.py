@@ -39,12 +39,12 @@ class Record:
   def find_phone(self, find_phone: str): 
     return next(filter(lambda phone: phone.value == find_phone, self.phones), None)
 
-  def edit_phone(self, old_phone: str, new_phone: str):
-    old_phone_include = self.find_phone(old_phone)
-    if old_phone_include:
-      new_phone_include = Phone(new_phone)
-      index = self.phones.index(old_phone_include)
-      self.phones[index] = new_phone_include
+  def edit_phone(self, old_phone_str: str, new_phone_str: str):
+    old_phone = self.find_phone(old_phone_str)
+    if old_phone:
+      new_phone = Phone(new_phone_str)
+      index = self.phones.index(old_phone)
+      self.phones[index] = new_phone
     else:
       raise ValueError(f'Phone {old_phone} not found')
 
@@ -64,7 +64,6 @@ class AddressBook(UserDict):
   def delete(self, name):
     del self.data[name]
 
-  # Реалізовано магічний метод __str__ для красивого виводу об’єкту класу AddressBook .
   def __str__(self):
     return "\n".join(str(contact) for contact in self.data.values())
 
